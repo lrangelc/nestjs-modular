@@ -5,6 +5,8 @@ import { Order } from '../entities/order.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 
 import { ProductsService } from './../../products/services/products.service';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import config from '../../config';
 
 @Injectable()
 export class UsersService {
@@ -21,11 +23,20 @@ export class UsersService {
   constructor(
     private productsService: ProductsService,
     @Inject('API_KEY') private apiKey: string,
+    private configService: ConfigService,
+    @Inject(config.KEY) private config2: ConfigType<typeof config>,
   ) {
     console.log({ apiKey });
   }
 
   findAll() {
+    const apiKey2 = this.config2.apiKey;
+    const dbName2 = this.config2.database.name;
+    const dbPort2 = this.config2.database.port;
+    const apiKey = this.configService.get('API_KEY');
+    const dbName = this.configService.get('DATABASE_NAME');
+    console.log(apiKey2, dbName2, dbPort2);
+    console.log(apiKey, dbName);
     return this.users;
   }
 
